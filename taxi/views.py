@@ -1,18 +1,21 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, UpdateView
-from .forms import DriverLicenseUpdateForm, DriverCreateForm, CarForm
 
-from .models import Driver, Car, Manufacturer
+from .forms import DriverLicenseUpdateForm, DriverCreateForm, CarForm
+from .models import Car, Manufacturer
+
+
+Driver = get_user_model()
 
 
 @login_required
 def index(request):
     """View function for the home page of the site."""
-
     num_drivers = Driver.objects.count()
     num_cars = Car.objects.count()
     num_manufacturers = Manufacturer.objects.count()
@@ -129,4 +132,4 @@ class DriverCreateView(LoginRequiredMixin, CreateView):
     model = Driver
     form_class = DriverCreateForm
     success_url = reverse_lazy("taxi:driver-list")
-    template_name = "driver_license_form.html"
+    template_name = "taxi/driver_form.html"

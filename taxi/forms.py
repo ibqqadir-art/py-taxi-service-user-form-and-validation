@@ -1,17 +1,23 @@
+import re
+
 from django import forms
-from .models import Driver, Car
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
+from .models import Car
 
-import re
+
+Driver = get_user_model()
 
 
 class DriverLicenseUpdateForm(forms.ModelForm):
     def clean_license_number(self):
         license_number = self.cleaned_data["license_number"]
 
-        if not re.fullmatch(r"^[A-Z]{3}[0-9]{5}$", license_number):
+        if not re.fullmatch(r"[A-Z]{3}[0-9]{5}", license_number):
             raise ValidationError("Invalid license number format")
+
         return license_number
 
     class Meta:
@@ -19,16 +25,23 @@ class DriverLicenseUpdateForm(forms.ModelForm):
         fields = ["license_number"]
 
 
-class DriverCreateForm(forms.ModelForm):
+class DriverCreateForm(UserCreationForm):
     def clean_license_number(self):
         license_number = self.cleaned_data["license_number"]
-        if not re.fullmatch(r"^[A-Z]{3}[0-9]{5}$", license_number):
+
+        if not re.fullmatch(r"[A-Z]{3}[0-9]{5}", license_number):
             raise ValidationError("Invalid license number format")
+
         return license_number
 
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = Driver
-        fields = ["username", "first_name", "last_name", "license_number"]
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "license_number",
+        ]
 
 
 class CarForm(forms.ModelForm):
