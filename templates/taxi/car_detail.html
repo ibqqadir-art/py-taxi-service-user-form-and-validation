@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 
 {% block content %}
@@ -11,12 +12,39 @@
       Update
     </a>
   </h1>
+
   <p>Manufacturer: ({{ car.manufacturer.name }}, {{ car.manufacturer.country }})</p>
+
   <h1>Drivers</h1>
   <hr>
+
+
+{% if user_is_driver %}
+  <p>Вы уже назначены водителем этого автомобиля.</p>
+
+  <form method="post" action="{% url 'taxi:car-unassign' pk=car.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">
+      Remove me from this car
+    </button>
+  </form>
+{% else %}
+  <p>Вы пока не назначены водителем этого автомобиля.</p>
+
+  <form method="post" action="{% url 'taxi:car-assign' pk=car.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">
+      Assign me to this car
+    </button>
+  </form>
+{% endif %}
+
+
   <ul>
     {% for driver in car.drivers.all %}
       <li>{{ driver.username }} ({{ driver.first_name }} {{ driver.last_name }})</li>
+    {% empty %}
+      <li>No drivers assigned.</li>
     {% endfor %}
   </ul>
 {% endblock %}
