@@ -22,15 +22,6 @@ class LicenseNumberValidationMixin:
         return license_number
 
 
-class DriverLicenseUpdateForm(
-    LicenseNumberValidationMixin,
-    forms.ModelForm,
-):
-    class Meta:
-        model = Driver
-        fields = ["license_number"]
-
-
 class DriverCreateForm(
     LicenseNumberValidationMixin,
     UserCreationForm,
@@ -43,6 +34,15 @@ class DriverCreateForm(
             "last_name",
             "license_number",
         ]
+
+
+class DriverLicenseUpdateForm(
+    LicenseNumberValidationMixin,
+    forms.ModelForm,
+):
+    class Meta:
+        model = Driver
+        fields = ["license_number"]
 
 
 class CarForm(forms.ModelForm):

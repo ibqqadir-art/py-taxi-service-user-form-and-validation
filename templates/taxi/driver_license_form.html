@@ -2,18 +2,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Update license</h1>
+  <h1>Update driver license</h1>
 
   <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
 
-    <button type="submit" class="btn btn-primary">
-      Update
-    </button>
+    <input type="submit" value="Update" class="btn btn-primary">
 
-    <a href="{% url 'taxi:driver-detail' pk=object.id %}"
-       class="btn btn-secondary">
+    <a href="{% url 'taxi:driver-list' %}" class="btn btn-secondary">
       Cancel
     </a>
   </form>
